@@ -80,3 +80,18 @@ function Book() {
 function addBookToLibrary(book) {
   myLibrary.push(book);
 }
+
+function openForm() {
+  document.querySelector(".form-container").style.display = "flex";
+}
+
+// function hideForm() {
+//   document.querySelector(".form-container").style.display = "inline";
+//   document.querySelector(".form-container").style.display = "none";
+//   document.querySelector(".form-container").style.height = "0px";
+// }
+
+const createBtn = document.querySelector(".create-btn");
+createBtn.addEventListener("click", function () {
+  createBook();
+});
