@@ -101,8 +101,18 @@ header {
   gap: 20px;
   border-radius: 10px;
 }
+#form h2 {
+  text-align: center;
+}
 #form button {
-  flex-grow: 0;
+  align-self: center;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  background-color: blueviolet;
+  color: white;
+  cursor: pointer;
 }
 .form-title,
 .form-author,
@@ -110,4 +120,22 @@ header {
 .form-read {
   display: flex;
   flex-direction: column;
+}
+
+.form-title label,
+.form-author label,
+.form-pages label,
+.form-read label {
+  padding: 5px 0;
+}
+
+#form input {
+  border: none;
+  height: 1.5rem;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+input:focus {
+  outline: none;
 }

@@ -85,11 +85,9 @@ function openForm() {
   document.querySelector(".form-container").style.display = "flex";
 }
 
-// function hideForm() {
-//   document.querySelector(".form-container").style.display = "inline";
-//   document.querySelector(".form-container").style.display = "none";
-//   document.querySelector(".form-container").style.height = "0px";
-// }
+function hideForm() {
+  document.querySelector(".form-container").style.display = "none";
+}
 
 const createBtn = document.querySelector(".create-btn");
 createBtn.addEventListener("click", function () {
