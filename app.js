@@ -5,10 +5,10 @@ const pages = document.querySelector("#pages");
 const add = document.querySelector(".add");
 const display = document.querySelector(".display");
 
-// add.addEventListener("click", function () {
-//   console.log("clicked");
-//   createBook();
-// });
+const myLibrary = [];
+
+// // Local Storage
+// myLibrary = JSON.parse(localStorage("myLibrary") || "[]");
 
 function createBook() {
   const book = document.createElement("div");
@@ -63,33 +63,30 @@ function createBook() {
   deleteBook.classList.add("delete");
 }
 
-const myLibrary = [];
-function sayHi() {
-  console.log("hey");
-}
-function Book() {
+function Book(title, author, pages, read) {
   (this.title = title),
     (this.author = author),
     (this.pages = pages),
     (this.read = read);
-  this.info = function () {
-    return `${title} by ${author}, ${pages} pages, ${read}`;
-  };
 }
 
-function addBookToLibrary(book) {
-  myLibrary.push(book);
+function addBookToLibrary() {
+  let title = document.querySelector("#title").value;
+  let author = document.querySelector("#author").value;
+  let pages = document.querySelector("#pages").value;
+  let read = document.querySelector("#read").checked;
+  let addBook = new Book(title, author, pages, read);
+
+  myLibrary.push(addBook);
+  console.log(myLibrary);
 }
 
 function openForm() {
   document.querySelector(".form-container").style.display = "flex";
 }
 
-function hideForm() {
-  document.querySelector(".form-container").style.display = "none";
-}
-
-const createBtn = document.querySelector(".create-btn");
-createBtn.addEventListener("click", function () {
-  createBook();
+const addBookBtn = document.querySelector("#create-book-btn");
+addBookBtn.addEventListener("click", function (e) {
+  e.preventDefault();
+  addBookToLibrary();
 });

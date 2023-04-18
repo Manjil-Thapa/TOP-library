@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -16,7 +15,6 @@
 
 <body>
   <div class="form-container">
-
     <form id="form" action="">
       <h2>Add New Book</h2>
       <hr>
@@ -29,18 +27,15 @@
         <input type="text" name="author" id="author" required>
       </div>
       <div class="form-pages">
-        <label for="author">Total Pages</label>
+        <label for="pages">Total pages</label>
         <input type="number" name="pages" id="pages" min="1" required>
       </div>
       <div class="form-read">
-        <label for="status">Book's status</label>
-        <select name="read" id="status">
-          <option value="finish">Complete</option>
-          <option value="unfinish">Incomplete</option>
-        </select>
+        <label for="read">I have completed this book</label>
+        <input type="checkbox" name="read" id="read" checked>
       </div>
       <hr>
-      <button>Submit</button>
+      <button id="create-book-btn">Submit</button>
     </form>
   </div>
   <header>
@@ -49,8 +44,8 @@
     </div>
     <div class="hero-right">
       <h3>Total books: 3</h3>
-      <h3>Books read: 1</h3>
-      <h3>Books unfinished: 2</h3>
+      <h3>Books complete: 1</h3>
+      <h3>Books : 2</h3>
     </div>
   </header>
   <main>
