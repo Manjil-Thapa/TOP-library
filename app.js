@@ -5,61 +5,13 @@ const pages = document.querySelector('#pages');
 const add = document.querySelector('.add');
 const display = document.querySelector('.display');
 
-const myLibrary = [];
 
-// function createBook() {
-//   const book = document.createElement("div");
-//   book.classList.add("book");
-
-//   const img = document.createElement("img");
-//   img.setAttribute("src", "images/wallpaper.jpg");
-
-//   const bookInfo = document.createElement("div");
-//   bookInfo.classList.add("book-info");
-
-//   const title = document.createElement("h2");
-//   title.setAttribute("id", "title");
-//   title.innerHTML = title.value;
-
-//   const author = document.createElement("h3");
-//   author.setAttribute("id", "author");
-//   author.textContent = "testing";
-
-//   const pages = document.createElement("h4");
-//   pages.setAttribute("id", "pages");
-//   pages.textContent = "testing";
-
-//   const bookOptions = document.createElement("div");
-//   bookOptions.classList.add("book-options");
-//   const read = document.createElement("div");
-//   read.classList.add("read");
-//   const bookReadLabel = document.createElement("label");
-//   bookReadLabel.setAttribute("for", "read");
-//   bookReadLabel.textContent = "Read";
-//   const bookReadInput = document.createElement("input");
-//   bookReadInput.setAttribute("type", "checkbox");
-//   bookReadInput.setAttribute("name", "read");
-//   bookReadInput.setAttribute("id", "read");
-//   read.append(bookReadLabel, bookReadInput);
-
-//   const deleteBook = document.createElement("div");
-//   deleteBook.classList.add("delete");
-//   const bookDeleteLabel = document.createElement("label");
-//   bookDeleteLabel.setAttribute("for", "delete");
-//   bookDeleteLabel.textContent = "Delete";
-//   const bookDeleteInput = document.createElement("input");
-//   bookDeleteInput.setAttribute("type", "checkbox");
-//   bookDeleteInput.setAttribute("name", "delete");
-//   bookDeleteInput.setAttribute("id", "delete");
-//   deleteBook.append(bookDeleteLabel, bookDeleteInput);
-
-//   bookInfo.append(title, author, pages);
-//   bookOptions.append(read, deleteBook);
-//   book.append(img, bookInfo, bookOptions);
-//   display.append(book);
-//   const deleteBook2 = document.createElement("div");
-//   deleteBook.classList.add("delete");
-// }
+//books - main div holding all the books
+const books = document.querySelector(".books");
+//add book button
+const addBook = document.querySelector(".add-book");
+//add/edit book modal
+const modal = document.querySelector("#modal");
 
 // click event to close form when clicking outside
 const outerForm = document.querySelector('.form-container');
@@ -68,53 +20,67 @@ window.addEventListener('click', function (e) {
     outerForm.style.display = 'none';
   }
 });
-function openForm() {
-  document.querySelector('.form-container').style.display = 'flex';
-}
 
-function Book(title, author, pages, read) {
-  (this.title = title),
-    (this.author = author),
-    (this.pages = pages),
-    (this.read = read);
-}
-
-function addBookToLibrary() {
-  let title = document.querySelector('#title').value;
-  let author = document.querySelector('#author').value;
-  let pages = document.querySelector('#pages').value;
-  let read = document.querySelector('#read').checked;
-  let addBook = new Book(title, author, pages, read);
-
-  myLibrary.push(addBook);
-
-  createBook();
-  console.log(myLibrary);
-}
-
-const addBookBtn = document.querySelector('#add-book-btn');
-addBookBtn.addEventListener('click', function (e) {
-  e.preventDefault();
-  addBookToLibrary();
+//button to open the modal and set modal title and button
+addBook.addEventListener("click", () => {
+  modal.style.display = "block";
+  document.querySelector(".form-title").textContent = "Add Book";
+  document.querySelector(".form-add-button").textContent = "Add";
 });
 
-// function render() {
-//   let libraryEl = document.querySelector("#library");
-//   libraryEl.innerHTML = "";
-//   for (let i = 0; i < myLibrary.length; i++) {
-//     let book = myLibrary[i];
-//     let bookEl = document.createElement("div");
-//     bookEl.innerHTML = `
-//       <div class='card-header'>
-//         <h3 class='title'>${book.title}</h3>
-//         <h5 class='author'>${book.author}</h5>
-//       </div>
-//       <div class='card-body'>
-//         <p>${book.pages} pages</p>
-//     `;
-//     libraryEl.appendChild(bookEl);
-//   }
-// }
+const myLibrary = [];
+
+function Book(title, author, pages, read) {
+    this.title = title,
+    this.author = author,
+    this.pages = pages,
+    this.read = read;
+};
+
+function addBookToLibrary(title, author, pages, read) {
+  myLibrary.push(new Book(title, author, pages, read));
+  saveAndRenderBooks();
+
+function createBookItem(book, index) {
+  const bookItem = document.createElement("div");
+  bookItem.setAttribute("id", index);
+  bookItem.setAttribute("key", index);
+  bookItem.setAttribute("class", "card book");
+  bookItem.appendChild(
+    createBookElement("h1", `Title: ${book.title}`, "book-title")
+  );
+  bookItem.appendChild(
+    createBookElement("h1", `Author: ${book.author}`, "book-author")
+  );
+  bookItem.appendChild(
+    createBookElement("h1", `Pages: ${book.pages}`, "book-pages")
+  );
+  bookItem.appendChild(createReadElement(bookItem, book));
+  bookItem.appendChild(createBookElement("button", "X", "delete"));
+  bookItem.appendChild(createIcons());
+  bookItem.appendChild(createEditIcon(book));
+  
+  bookItem.querySelector(".delete").addEventListener("click", () => {
+    deleteBook(index);
+  });
+  
+  books.insertAdjacentElement("afterbegin", bookItem);
+}
+
+function renderBooks() {
+  books.textContent = "";
+  myLibrary.map((book, index) => {
+    createBookItem(book, index);
+  });
+}
+
+function saveAndRenderBooks() {
+  localStorage.setItem("library", JSON.stringify(myLibrary));
+  renderBooks();
+}
+
+addLocalStorage();
+
 
 function createBook() {
   let libraryContainer = document.querySelector('.display');
@@ -138,7 +104,7 @@ function createBook() {
 
       <div class="book-options">
         <div>
-          <label for="read">Read</label>
+          <label for="read">${book.read}</label>
           <input type="checkbox" name="read" id="read" />
         </div>
         <div>
@@ -150,6 +116,59 @@ function createBook() {
     libraryContainer.append(bookCard);
   }
 }
+
+
+
+function openForm() {
+  document.querySelector('.form-container').style.display = 'flex';
+}
+
+function addBookToLibrary() {
+  let title = document.querySelector('#title').value;
+  let author = document.querySelector('#author').value;
+  let pages = document.querySelector('#pages').value;
+  let read = document.querySelector('#read').checked;
+  let addBook = new Book(title, author, pages, read);
+
+  myLibrary.push(addBook);
+
+  createBook();
+  console.log(myLibrary);
+}
+
+const addBookBtn = document.querySelector('#add-book-btn');
+addBookBtn.addEventListener('click', function (e) {
+  e.preventDefault();
+  addBookToLibrary();
+});
+
+// another method to add form
+// const addBookBtn = document.querySelector('#add-book-btn');
+// addBookBtn.addEventListener('click', function (e) {
+//   e.preventDefault();
+
+//   const data = new FormData(e.target);
+//   let newBook = {};
+//   for (let [name, value] of data) {
+//     if (name === 'book-read') {
+//       newBook['book-read'] = true;
+//     } else {
+//       newBook[name] = value || '';
+//     }
+//   }
+//   if (!newBook['book-read']) {
+//     newBook['book-read'] = false;
+//   }
+// });
+
+// helper fn to create html el with textcontent and classes
+function createBookEl(el, content, className) {
+  const element = document.createElement(el);
+  element.textContent = content;
+  element.setAttribute('class', className);
+  return element;
+}
+
 //helper function to create input checkbox for books read / unread w/ event listener
 function createReadElement(bookItem, book) {
   let read = document.createElement('div');
@@ -167,14 +186,6 @@ function createReadElement(bookItem, book) {
       book.read = false;
       saveAndRenderBooks();
     }
-  });
-}
-
-//function to render all books
-function renderBook() {
-  books.textcContet = '';
-  myLibrary.map((book, index) => {
-    createBookItem(book, index);
   });
 }
 
@@ -203,3 +214,4 @@ function saveAndRenderBooks() {
   renderBook();
 }
 // addLocalStorage - render on page load
+// addLocalStorage();

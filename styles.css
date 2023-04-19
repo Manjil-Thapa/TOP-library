@@ -44,7 +44,7 @@ header {
 
 .book {
   aspect-ratio: 1 / 1.414;
-  border: 1px solid black;
+  border: 1px solid #797979;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -78,11 +78,11 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #e2e2e2ca;
+  background-color: #e7e7e7ca;
   cursor: pointer;
 }
 .add-book:hover {
-  background-color: #fff;
+  background-color: #d8d7d7;
 }
 
 /* FORM */
