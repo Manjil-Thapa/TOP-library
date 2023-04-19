@@ -6,13 +6,13 @@ body {
   min-height: 100vh;
   display: grid;
   grid-template-rows: 1fr 2fr;
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 500;
   gap: 5rem;
   position: relative;
 }
 body::before {
-  content: "";
+  content: '';
   background-image: url(images/library.jpg);
   background-size: cover;
   position: absolute;
