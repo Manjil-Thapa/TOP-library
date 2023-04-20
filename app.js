@@ -56,11 +56,42 @@ function createBookOptions(bookItem, book) {
   return readDiv;
 }
 
+function createDeleteOptions(bookItem, book) {
+  let deleteDiv = document.createElement('div');
+  deleteDiv.classList.add('book-delete');
+  deleteDiv.appendChild(helperLabelElement('label', 'for', 'delete', 'Delete'));
+
+  let input = document.createElement('input');
+  input.type = 'checkbox';
+  input.setAttribute('name', 'delete');
+  input.setAttribute('id', 'delete');
+  input.addEventListener('click', function (e) {
+    if (e.target.checked) {
+      bookItem.setAttribute('class', 'book delete-checked');
+      book.read = true;
+      renderAllBooks();
+    } else {
+      bookItem.setAttribute('class', 'book delete-unchecked');
+      book.read = false;
+      renderAllBooks();
+    }
+  });
+  if (book.read) {
+    input.checked = true;
+    bookItem.setAttribute('class', 'book delete-checked');
+  }
+  deleteDiv.appendChild(input);
+  return deleteDiv;
+}
+
 function createBookItems(book, index) {
   const bookItem = document.createElement('div');
   bookItem.setAttribute('id', index);
   bookItem.setAttribute('key', index);
   bookItem.classList.add('book');
+
+  const bookCover = document.createElement('img');
+  bookCover.setAttribute('src', 'images/wallpaper.jpg');
 
   bookInfo = document.createElement('div');
   bookInfo.classList.add('book-info');
@@ -70,10 +101,12 @@ function createBookItems(book, index) {
 
   bookOptions = document.createElement('div');
   bookOptions.classList.add('book-options');
-  bookOptions.appendChild(createBookOptions(bookItem, book));
+  bookOptions.append(
+    createBookOptions(bookItem, book),
+    createDeleteOptions(bookItem, book)
+  );
 
-  bookItem.appendChild(bookInfo, bookOptions);
-
+  bookItem.append(bookCover, bookInfo, bookOptions);
   booksDisplay.append(bookItem);
 }
 
