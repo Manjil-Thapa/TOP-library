@@ -35,7 +35,7 @@ header {
   gap: 40px;
 }
 
-.display {
+.books-display {
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -44,7 +44,7 @@ header {
 
 .book {
   aspect-ratio: 1 / 1.414;
-  border: 1px solid #797979;
+  border: 1px solid #626262;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -78,11 +78,11 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #e7e7e7ca;
+  background-color: #e2e2e2ca;
   cursor: pointer;
 }
 .add-book:hover {
-  background-color: #d8d7d7;
+  background-color: #fff;
 }
 
 /* FORM */

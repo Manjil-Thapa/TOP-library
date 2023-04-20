@@ -5,7 +5,7 @@ const myLibrary = [
     title: 'Real Camp',
     author: 'Curry',
     pages: 402,
-    read: true,
+    read: false,
   },
   {
     title: 'Champ',
@@ -14,6 +14,16 @@ const myLibrary = [
     read: false,
   },
 ];
+function openForm() {
+  document.querySelector('.form-container').style.display = 'flex';
+}
+// click event to close form when clicking outside
+const outerForm = document.querySelector('.form-container');
+window.addEventListener('click', function (e) {
+  if (e.target == outerForm) {
+    outerForm.style.display = 'none';
+  }
+});
 
 function helperBookElement(el, textContent, className) {
   const element = document.createElement(el);
@@ -111,6 +121,11 @@ function createBookItems(book, index) {
 }
 
 function renderAllBooks() {
+  booksDisplay.innerHTML = `
+  <div class="book add-book" onclick="openForm()">
+  <img src="images/plus.svg" alt="">
+</div>
+  `;
   myLibrary.map((book, index) => {
     createBookItems(book, index);
   });
