@@ -2,19 +2,25 @@
 const booksDisplay = document.querySelector('.books-display');
 
 // const formContainer = document.querySelector('.form-container');
-const addBookBtn = document.querySelector('#add-book-btn');
+const addNewBook = document.querySelector('#form');
 
 function Book(title, author, pages, read) {
   this.title = title;
   this.author = author;
   this.pages = pages;
+  this.read = read;
+  this.id = Math.floor(Math.random() * 10000000000000);
 }
 
 function addBookToLibrary(title, author, pages, read) {
   myLibrary.push(new Book(title, author, pages, read));
   saveAndRenderBooks();
 }
-addBookBtn.addEventListener('submit', function (e) {
+function saveAndRenderBooks() {
+  localStorage.setItem('library', JSON.stringify(myLibrary));
+  renderLibrary();
+}
+addNewBook.addEventListener('submit', function (e) {
   e.preventDefault();
 
   // grab form inputs and convert to obj
@@ -31,10 +37,10 @@ addBookBtn.addEventListener('submit', function (e) {
     newBook['book-read'] = false;
   }
   addBookToLibrary(
-    newBook['book-title'],
-    newBook['book-author'],
-    newBook['book-pages'],
-    newBook['book-read']
+    newBook['title'],
+    newBook['author'],
+    newBook['pages'],
+    newBook['read']
   );
 });
 
@@ -165,11 +171,6 @@ function renderLibrary() {
   myLibrary.map((book, index) => {
     createBookItems(book, index);
   });
-}
-
-function saveAndRenderBooks() {
-  localStorage.setItem('library', JSON.stringify(myLibrary));
-  renderLibrary();
 }
 
 // render storage on page
