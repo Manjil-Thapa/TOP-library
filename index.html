@@ -17,7 +17,7 @@
 <body>
   <div class="form-container">
     <form id="form" action="">
-      <h2>Add New Book</h2>
+      <h2 id="form-header"></h2>
       <hr>
       <div class="form-title">
         <label for="title">Title</label>
@@ -36,7 +36,7 @@
         <input type="checkbox" name="read" id="read" checked>
       </div>
       <hr>
-      <button id="add-book-btn">Add</button>
+      <button id="add-book-btn"></button>
     </form>
   </div>
   <header>
@@ -51,7 +51,7 @@
   </header>
   <main>
     <div class="books-display">
-      <div class="book add-book" onclick="openForm()">
+      <div class="book add-book" onclick="openAddForm()">
         <img src="images/plus.svg" alt="">
       </div>
     </div>

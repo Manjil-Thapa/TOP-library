@@ -1,30 +1,69 @@
+// container to display all books
 const booksDisplay = document.querySelector('.books-display');
 
-const myLibrary = [
-  {
-    title: 'Real Camp',
-    author: 'Curry',
-    pages: 402,
-    read: false,
-  },
-  {
-    title: 'Champ',
-    author: 'James',
-    pages: '4',
-    read: false,
-  },
-];
-function openForm() {
-  document.querySelector('.form-container').style.display = 'flex';
+// const formContainer = document.querySelector('.form-container');
+const addBookBtn = document.querySelector('#add-book-btn');
+
+function Book(title, author, pages, read) {
+  this.title = title;
+  this.author = author;
+  this.pages = pages;
 }
-// click event to close form when clicking outside
+
+function addBookToLibrary(title, author, pages, read) {
+  myLibrary.push(new Book(title, author, pages, read));
+  saveAndRenderBooks();
+}
+addBookBtn.addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  // grab form inputs and convert to obj
+  const data = new FormData(e.target);
+  let newBook = {};
+  for (let [name, value] of data) {
+    if (name === 'book-read') {
+      newBook['book-read'] = true;
+    } else {
+      newBook[name] = value || '';
+    }
+  }
+  if (!newBook['book-read']) {
+    newBook['book-read'] = false;
+  }
+  addBookToLibrary(
+    newBook['book-title'],
+    newBook['book-author'],
+    newBook['book-pages'],
+    newBook['book-read']
+  );
+});
+
+let myLibrary = [];
+
+function addLocalStorage() {
+  myLibrary = JSON.parse(localStorage.getItem('library') || []);
+  saveAndRenderBooks();
+}
+
+function openAddForm() {
+  document.querySelector('.form-container').style.display = 'flex';
+  document.querySelector('#form-header').textContent = 'Add New Book';
+  document.querySelector('#add-book-btn').textContent = 'Add';
+}
+
+// close form btn
+// span.addEventListener('click', function () {
+//   document.querySelector('.form-container').style.display = 'none';
+// });
+
+// click event to close form when clicking outside form
 const outerForm = document.querySelector('.form-container');
 window.addEventListener('click', function (e) {
   if (e.target == outerForm) {
     outerForm.style.display = 'none';
   }
 });
-
+// helper fn to create html elements w/ classes and text
 function helperBookElement(el, textContent, className) {
   const element = document.createElement(el);
   element.textContent = textContent;
@@ -47,12 +86,22 @@ function createEdit() {
 }
 function createDelete() {
   const deleteBtn = document.createElement('span');
+  deleteBtn.classList.add('book-delete');
   const deleteIcon = document.createElement('img');
   deleteIcon.setAttribute('src', 'images/delete.svg');
   deleteBtn.append(deleteIcon);
+  deleteBtn.addEventListener('click', function () {
+    deleteBook();
+  });
   return deleteBtn;
 }
+// delete funtionality
+function deleteBook(index) {
+  myLibrary.splice(index, 1);
+  saveAndRenderBooks();
+}
 
+// helper fn to create input w/ event listener
 function createBookOptions(bookItem, book) {
   let readDiv = document.createElement('div');
   readDiv.classList.add('book-read');
@@ -66,11 +115,11 @@ function createBookOptions(bookItem, book) {
     if (e.target.checked) {
       bookItem.setAttribute('class', 'book read-checked');
       book.read = true;
-      renderAllBooks();
+      saveAndRenderBooks();
     } else {
       bookItem.setAttribute('class', 'book read-unchecked');
       book.read = false;
-      renderAllBooks();
+      saveAndRenderBooks();
     }
   });
   if (book.read) {
@@ -103,14 +152,13 @@ function createBookItems(book, index) {
   bookEditAndDelete.append(createEdit(), createDelete());
 
   bookOptions.append(createBookOptions(bookItem, book), bookEditAndDelete);
-
   bookItem.append(bookCover, bookInfo, bookOptions);
   booksDisplay.append(bookItem);
 }
 
-function renderAllBooks() {
+function renderLibrary() {
   booksDisplay.innerHTML = `
-  <div class="book add-book" onclick="openForm()">
+  <div class="book add-book" onclick="openAddForm()">
   <img src="images/plus.svg" alt="">
 </div>
   `;
@@ -119,4 +167,10 @@ function renderAllBooks() {
   });
 }
 
-renderAllBooks();
+function saveAndRenderBooks() {
+  localStorage.setItem('library', JSON.stringify(myLibrary));
+  renderLibrary();
+}
+
+// render storage on page
+addLocalStorage();
