@@ -1,7 +1,7 @@
 // container to display all books
 const booksDisplay = document.querySelector('.books-display');
 
-// const formContainer = document.querySelector('.form-container');
+const formContainer = document.querySelector('.form-container');
 const addNewBook = document.querySelector('#form');
 
 function Book(title, author, pages, read) {
@@ -9,7 +9,6 @@ function Book(title, author, pages, read) {
   this.author = author;
   this.pages = pages;
   this.read = read;
-  this.id = Math.floor(Math.random() * 10000000000000);
 }
 
 function addBookToLibrary(title, author, pages, read) {
@@ -84,11 +83,14 @@ function helperLabelElement(el, attribute, attData, textContent) {
 }
 
 function createEdit() {
-  const iconBtn = document.createElement('span');
+  const editBtn = document.createElement('span');
   const editIcon = document.createElement('img');
   editIcon.setAttribute('src', 'images/pencil.svg');
-  iconBtn.append(editIcon);
-  return iconBtn;
+  editBtn.append(editIcon);
+  editBtn.addEventListener('click', function () {
+    preLoadEditForm();
+  });
+  return editBtn;
 }
 function createDelete() {
   const deleteBtn = document.createElement('span');
@@ -103,10 +105,18 @@ function createDelete() {
 }
 // delete funtionality
 function deleteBook(index) {
-  myLibrary.splice(index, 1);
+  console.log(myLibrary.splice(index, 1));
   saveAndRenderBooks();
 }
-
+function preLoadEditForm(book) {
+  formContainer.style.display = 'flex';
+  document.querySelector('#form-header').textContent = 'Edit Book';
+  document.querySelector('#add-book-btn').textContent = 'Edit';
+  document.querySelector('#title').value = book.title || '';
+  document.querySelector('#author').value = book.author || '';
+  document.querySelector('#pages').value = book.pages || '';
+  document.querySelector('#read').checked = book.read;
+}
 // helper fn to create input w/ event listener
 function createBookOptions(bookItem, book) {
   let readDiv = document.createElement('div');
@@ -173,5 +183,5 @@ function renderLibrary() {
   });
 }
 
-// render storage on page
+// render storage on page load
 addLocalStorage();
