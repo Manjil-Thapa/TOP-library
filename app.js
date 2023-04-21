@@ -38,6 +38,21 @@ function helperLabelElement(el, attribute, attData, textContent) {
   return label;
 }
 
+function createEdit() {
+  const iconBtn = document.createElement('span');
+  const editIcon = document.createElement('img');
+  editIcon.setAttribute('src', 'images/pencil.svg');
+  iconBtn.append(editIcon);
+  return iconBtn;
+}
+function createDelete() {
+  const deleteBtn = document.createElement('span');
+  const deleteIcon = document.createElement('img');
+  deleteIcon.setAttribute('src', 'images/delete.svg');
+  deleteBtn.append(deleteIcon);
+  return deleteBtn;
+}
+
 function createBookOptions(bookItem, book) {
   let readDiv = document.createElement('div');
   readDiv.classList.add('book-read');
@@ -66,34 +81,6 @@ function createBookOptions(bookItem, book) {
   return readDiv;
 }
 
-function createDeleteOptions(bookItem, book) {
-  let deleteDiv = document.createElement('div');
-  deleteDiv.classList.add('book-delete');
-  deleteDiv.appendChild(helperLabelElement('label', 'for', 'delete', 'Delete'));
-
-  let input = document.createElement('input');
-  input.type = 'checkbox';
-  input.setAttribute('name', 'delete');
-  input.setAttribute('id', 'delete');
-  input.addEventListener('click', function (e) {
-    if (e.target.checked) {
-      bookItem.setAttribute('class', 'book delete-checked');
-      book.read = true;
-      renderAllBooks();
-    } else {
-      bookItem.setAttribute('class', 'book delete-unchecked');
-      book.read = false;
-      renderAllBooks();
-    }
-  });
-  if (book.read) {
-    input.checked = true;
-    bookItem.setAttribute('class', 'book delete-checked');
-  }
-  deleteDiv.appendChild(input);
-  return deleteDiv;
-}
-
 function createBookItems(book, index) {
   const bookItem = document.createElement('div');
   bookItem.setAttribute('id', index);
@@ -111,10 +98,11 @@ function createBookItems(book, index) {
 
   bookOptions = document.createElement('div');
   bookOptions.classList.add('book-options');
-  bookOptions.append(
-    createBookOptions(bookItem, book),
-    createDeleteOptions(bookItem, book)
-  );
+
+  bookEditAndDelete = helperBookElement('div', null, 'book-icons');
+  bookEditAndDelete.append(createEdit(), createDelete());
+
+  bookOptions.append(createBookOptions(bookItem, book), bookEditAndDelete);
 
   bookItem.append(bookCover, bookInfo, bookOptions);
   booksDisplay.append(bookItem);
