@@ -1,14 +1,14 @@
 // container to display all books
 const booksDisplay = document.querySelector('.books-display');
-
 const formContainer = document.querySelector('.form-container');
-const addNewBook = document.querySelector('#form');
+const bookForm = document.querySelector('#form');
 
 function Book(title, author, pages, read) {
   this.title = title;
   this.author = author;
   this.pages = pages;
   this.read = read;
+  this.id = Math.floor(Math.random() * 100000);
 }
 
 function addBookToLibrary(title, author, pages, read) {
@@ -19,11 +19,12 @@ function saveAndRenderBooks() {
   localStorage.setItem('library', JSON.stringify(myLibrary));
   renderLibrary();
 }
-addNewBook.addEventListener('submit', function (e) {
+bookForm.addEventListener('submit', function (e) {
   e.preventDefault();
 
   // grab form inputs and convert to obj
   const data = new FormData(e.target);
+  console.log(e);
   let newBook = {};
   for (let [name, value] of data) {
     if (name === 'book-read') {
@@ -35,12 +36,24 @@ addNewBook.addEventListener('submit', function (e) {
   if (!newBook['book-read']) {
     newBook['book-read'] = false;
   }
-  addBookToLibrary(
-    newBook['title'],
-    newBook['author'],
-    newBook['pages'],
-    newBook['read']
-  );
+  if (document.querySelector('.form-title').textContent === 'Edit Book') {
+    let id = e.target.id;
+    let editBook = myLibrary.filter((book) => book.id == id)[0];
+    editBook.title = newBook['title'];
+    editBook.author = newBook['author'];
+    editBook.pages = newBook['pages'];
+    editBook.read = newBook['read'];
+    saveAndRenderBooks();
+  } else {
+    addBookToLibrary(
+      newBook['title'],
+      newBook['author'],
+      newBook['pages'],
+      newBook['read']
+    );
+  }
+  bookForm.reset();
+  formContainer.style.display = 'none';
 });
 
 let myLibrary = [];
@@ -84,6 +97,7 @@ function helperLabelElement(el, attribute, attData, textContent) {
 
 function createEdit() {
   const editBtn = document.createElement('span');
+  editBtn.classList.add('book-edit');
   const editIcon = document.createElement('img');
   editIcon.setAttribute('src', 'images/pencil.svg');
   editBtn.append(editIcon);
@@ -92,31 +106,23 @@ function createEdit() {
   });
   return editBtn;
 }
-function createDelete() {
-  const deleteBtn = document.createElement('span');
-  deleteBtn.classList.add('book-delete');
-  const deleteIcon = document.createElement('img');
-  deleteIcon.setAttribute('src', 'images/delete.svg');
-  deleteBtn.append(deleteIcon);
-  deleteBtn.addEventListener('click', function () {
-    deleteBook();
-  });
-  return deleteBtn;
+
+function preLoadEditForm(book) {
+  formContainer.style.display = 'flex';
+  document.querySelector('#form-header').textContent = 'Edit Book';
+  document.querySelector('#add-book-btn').textContent = 'Edit';
+  document.querySelector('#form').setAttribute('id', book.id);
+  document.querySelector('#title').value = book.title || '';
+  document.querySelector('#author').value = book.author || '';
+  document.querySelector('#pages').value = book.pages || '';
+  document.querySelector('#read').checked = book.read;
 }
 // delete funtionality
 function deleteBook(index) {
   console.log(myLibrary.splice(index, 1));
   saveAndRenderBooks();
 }
-function preLoadEditForm(book) {
-  formContainer.style.display = 'flex';
-  document.querySelector('#form-header').textContent = 'Edit Book';
-  document.querySelector('#add-book-btn').textContent = 'Edit';
-  document.querySelector('#title').value = book.title || '';
-  document.querySelector('#author').value = book.author || '';
-  document.querySelector('#pages').value = book.pages || '';
-  document.querySelector('#read').checked = book.read;
-}
+
 // helper fn to create input w/ event listener
 function createBookOptions(bookItem, book) {
   let readDiv = document.createElement('div');
@@ -129,18 +135,18 @@ function createBookOptions(bookItem, book) {
   input.setAttribute('id', 'read');
   input.addEventListener('click', function (e) {
     if (e.target.checked) {
-      bookItem.setAttribute('class', 'book read-checked');
+      bookItem.setAttribute('class', 'book');
       book.read = true;
       saveAndRenderBooks();
     } else {
-      bookItem.setAttribute('class', 'book read-unchecked');
+      bookItem.setAttribute('class', 'book');
       book.read = false;
       saveAndRenderBooks();
     }
   });
   if (book.read) {
     input.checked = true;
-    bookItem.setAttribute('class', 'book read-checked');
+    bookItem.setAttribute('class', 'book');
   }
   readDiv.appendChild(input);
   return readDiv;
@@ -163,6 +169,18 @@ function createBookItems(book, index) {
 
   bookOptions = document.createElement('div');
   bookOptions.classList.add('book-options');
+
+  function createDelete() {
+    const deleteBtn = document.createElement('span');
+    deleteBtn.classList.add('book-delete');
+    const deleteIcon = document.createElement('img');
+    deleteIcon.setAttribute('src', 'images/delete.svg');
+    deleteBtn.append(deleteIcon);
+    deleteBtn.addEventListener('click', function () {
+      deleteBook(index);
+    });
+    return deleteBtn;
+  }
 
   bookEditAndDelete = helperBookElement('div', null, 'book-icons');
   bookEditAndDelete.append(createEdit(), createDelete());
